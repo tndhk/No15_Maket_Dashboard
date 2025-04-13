@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ユーザーモデル（Clerkと連携）
+model User {
+  id        String     @id
+  email     String     @unique
+  firstName String?
+  lastName  String?
+  role      String     @default("viewer") // "admin" または "viewer"
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  favorites Favorite[]
+}
+
+// 金融シンボルモデル
+model Symbol {
+  id          Int       @id @default(autoincrement())
+  symbol      String    @unique
+  name        String
+  description String?
+  category    String    @default("stock") // "stock", "crypto", "forex" など
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  prices      Price[]
+  favorites   Favorite[]
+}
+
+// 価格データモデル
+model Price {
+  id        Int      @id @default(autoincrement())
+  symbolId  Int
+  symbol    Symbol   @relation(fields: [symbolId], references: [id], onDelete: Cascade)
+  date      DateTime
+  open      Float?
+  high      Float?
+  low       Float?
+  close     Float
+  volume    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  source    String   @default("api") // データソース（"api", "manual" など）
+
+  @@index([symbolId])
+  @@index([date])
+}
+
+// お気に入りモデル
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symbolId  Int
+  symbol    Symbol   @relation(fields: [symbolId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, symbolId])
+  @@index([userId])
+  @@index([symbolId])
+}
+
+// API取得ログモデル
+model ApiLog {
+  id          Int      @id @default(autoincrement())
+  endpoint    String
+  status      String
+  statusCode  Int?
+  requestBody String?
+  response    String?
+  createdAt   DateTime @default(now())
+}

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useAuth, UserButton } from "@clerk/nextjs";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 interface HeaderProps {
   className?: string;
@@ -9,6 +11,8 @@ interface HeaderProps {
 }
 
 export function Header({ className, onMenuClick }: HeaderProps) {
+  const { isSignedIn } = useAuth();
+
   return (
     <header className={cn("w-full bg-primary text-primary-foreground py-4 px-6 shadow-md", className)}>
       <div className="container mx-auto flex justify-between items-center">
@@ -27,6 +31,8 @@ export function Header({ className, onMenuClick }: HeaderProps) {
           </Link>
         </nav>
         <div className="flex items-center space-x-4">
+          <ThemeToggle />
+          
           <button
             className="md:hidden focus:outline-none"
             aria-label="メニュー"
@@ -47,9 +53,17 @@ export function Header({ className, onMenuClick }: HeaderProps) {
               />
             </svg>
           </button>
-          <button className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80 transition-colors">
-            ログイン
-          </button>
+          
+          {isSignedIn ? (
+            <UserButton afterSignOutUrl="/" />
+          ) : (
+            <Link 
+              href="/sign-in" 
+              className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80 transition-colors"
+            >
+              ログイン
+            </Link>
+          )}
         </div>
       </div>
     </header>
