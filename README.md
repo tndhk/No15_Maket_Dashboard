@@ -1,3 +1,87 @@
+# 金融データトラッキングダッシュボード
+
+## ローカル開発環境のセットアップ
+
+### 前提条件
+
+- [Node.js](https://nodejs.org/) (v20.0.0 以上)
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### 環境変数の設定
+
+1. `.env.example` ファイルをコピーして `.env` ファイルを作成します。
+
+```bash
+cp .env.example .env
+```
+
+2. `.env` ファイルを編集して、必要な環境変数を設定します。
+   - 開発環境では `DATABASE_URL="file:./dev.db"` を使用します（SQLite）
+   - Clerk認証用のAPIキーを設定します
+   - 外部API（Alpha Vantage、Yahoo Finance、CoinGecko）のキーを設定します
+
+### データベースのセットアップ
+
+```bash
+# Prismaマイグレーションを実行
+npx prisma migrate dev --name init
+
+# (オプション) サンプルデータを追加
+npx prisma db seed
+```
+
+### Dockerでの起動方法
+
+```bash
+# Dockerコンテナのビルドと起動
+docker compose up --build -d
+
+# ログの確認
+docker compose logs -f
+
+# コンテナの停止
+docker compose down
+```
+
+### Dockerなしでの起動方法
+
+```bash
+# 依存関係のインストール
+npm install --legacy-peer-deps
+
+# 開発サーバーの起動
+npm run dev
+```
+
+### アクセス方法
+
+アプリケーションは以下のURLでアクセスできます：
+- [http://localhost:3000](http://localhost:3000)
+
+### 開発用コマンド
+
+```bash
+# コードのリント
+npm run lint
+
+# テストの実行
+npm test
+
+# ビルド
+npm run build
+
+# ビルドしたアプリケーションの起動
+npm start
+
+# Prisma Studioの起動（データベース管理ツール）
+npx prisma studio
+```
+
+## 本番環境へのデプロイ
+
+本番環境へのデプロイについては、[database.md](database.md) を参照してください。
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

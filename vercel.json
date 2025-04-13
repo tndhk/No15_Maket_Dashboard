@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm ci --legacy-peer-deps",
+  "devCommand": "npm run dev",
+  "regions": ["hnd1"],
+  "crons": [
+    {
+      "path": "/api/cron/clear-old-logs",
+      "schedule": "0 0 * * *"
+    }
+  ]
+} 
