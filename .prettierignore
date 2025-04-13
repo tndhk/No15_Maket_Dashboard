@@ -1,0 +1,8 @@
+.next
+node_modules
+public
+.git
+.gitignore
+package-lock.json
+README.md
+next-env.d.ts 
