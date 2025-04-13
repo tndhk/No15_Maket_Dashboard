@@ -47,3 +47,52 @@ export function formatPercent(value: number): string {
     maximumFractionDigits: 2
   }).format(value / 100)
 }
+
+// API データ整形用のユーティリティ
+export function normalizeAPIResponse<T>(
+  data: any, 
+  source: string, 
+  transformFn: (data: any) => T
+): T {
+  try {
+    return transformFn(data);
+  } catch (error) {
+    console.error(`Data normalization error from ${source}:`, error);
+    throw new Error(`データの正規化に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+// 価格データを標準形式に整形
+export interface StandardPriceData {
+  date: Date;
+  open: number | null;
+  high: number | null;
+  low: number | null;
+  close: number;
+  volume: number | null;
+  source: string;
+}
+
+// 日付の範囲を生成
+export function generateDateRange(startDate: Date, endDate: Date): Date[] {
+  const dates: Date[] = [];
+  const currentDate = new Date(startDate);
+  
+  while (currentDate <= endDate) {
+    dates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  return dates;
+}
+
+// エラーハンドリング用のヘルパー
+export interface ApiError {
+  status: number;
+  message: string;
+  source: string;
+}
+
+export function createApiError(status: number, message: string, source: string): ApiError {
+  return { status, message, source };
+}
