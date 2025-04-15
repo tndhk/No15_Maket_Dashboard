@@ -11,6 +11,7 @@ import { searchSymbols } from "@/lib/api/symbol-search";
 import { createSymbol } from "@/lib/dal/symbols";
 import { z } from "zod";
 import { createSymbolSchema } from "@/lib/validations/symbol";
+import { handleFormSubmit } from '@/lib/actions/symbols';
 
 // 型定義
 type SymbolFormValues = z.infer<typeof createSymbolSchema>;
@@ -44,26 +45,6 @@ export default function CreateSymbolPage() {
     setSelectedResult(result);
     // 選択後にフォームタブに切り替え
     setActiveTab("form");
-  };
-  
-  // フォーム送信処理
-  const handleFormSubmit = async (values: SymbolFormValues) => {
-    setIsSubmitting(true);
-    try {
-      // APIを呼び出して銘柄を作成
-      const symbol = await createSymbol(values);
-      
-      toast.success("銘柄を登録しました");
-      
-      // 成功したら一覧画面に戻る
-      router.push("/symbols");
-      router.refresh();
-    } catch (error) {
-      console.error("Error creating symbol:", error);
-      toast.error("銘柄の登録に失敗しました");
-    } finally {
-      setIsSubmitting(false);
-    }
   };
   
   return (

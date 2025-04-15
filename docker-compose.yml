@@ -10,6 +10,15 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - prisma:/app/prisma
     environment:
       - NODE_ENV=development
-    restart: always 
+      - DATABASE_URL=file:/app/prisma/dev.db
+    env_file:
+      - .env
+    restart: always
+    command: >
+      bash -c "npx prisma generate && npm run dev"
+
+volumes:
+  prisma: 

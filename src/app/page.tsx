@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
@@ -11,39 +13,39 @@ export default function Home() {
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-card p-6 rounded-lg shadow-md">
+        <div className="bg-card p-6 rounded-lg shadow-md flex flex-col h-full">
           <h2 className="text-xl font-semibold mb-3">銘柄監視</h2>
           <p className="text-muted-foreground mb-4">
             お気に入りの銘柄をリアルタイムで監視し、価格変動を追跡できます。
           </p>
           <div className="mt-auto">
-            <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-              銘柄を追加
-            </button>
+            <Button asChild>
+              <Link href="/symbols">銘柄を追加</Link>
+            </Button>
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-lg shadow-md">
+        <div className="bg-card p-6 rounded-lg shadow-md flex flex-col h-full">
           <h2 className="text-xl font-semibold mb-3">トレンド分析</h2>
           <p className="text-muted-foreground mb-4">
             過去のデータを分析し、市場動向やトレンドを把握できます。
           </p>
           <div className="mt-auto">
-            <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-              分析を開始
-            </button>
+            <Button asChild>
+              <Link href="/dashboard">分析を開始</Link>
+            </Button>
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-lg shadow-md">
+        <div className="bg-card p-6 rounded-lg shadow-md flex flex-col h-full">
           <h2 className="text-xl font-semibold mb-3">カスタムアラート</h2>
           <p className="text-muted-foreground mb-4">
             重要な価格変動や市場イベントの通知を設定できます。
           </p>
           <div className="mt-auto">
-            <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
-              アラートを設定
-            </button>
+            <Button asChild>
+              <Link href="/settings">アラートを設定</Link>
+            </Button>
           </div>
         </div>
       </section>

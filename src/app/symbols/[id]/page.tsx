@@ -1,28 +1,12 @@
-'use client';
-
-import { useState, useEffect } from "react";
-import { useParams, useRouter, notFound } from "next/navigation";
-import { toast } from "sonner";
-import { ArrowLeft, MoreHorizontal, RefreshCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { getSymbolById, getSymbolPrices } from "@/lib/dal/symbols";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { SymbolDetailSkeleton } from "@/components/features/symbols/SymbolDetailSkeleton";
-import { cn, formatDate } from "@/lib/utils";
+import { notFound } from "next/navigation";
 import { FavoriteButton } from "@/components/features/favorites/FavoriteButton";
 import { getCurrentUser } from "@/lib/auth/auth";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SymbolHeader from "@/components/features/symbols/SymbolHeader";
-import SymbolDetailCard from "@/components/features/symbols/SymbolDetailCard";
-import SymbolPriceChart from "@/components/features/symbols/SymbolPriceChart";
-import SymbolPriceTable from "@/components/features/symbols/SymbolPriceTable";
+import { getSymbolById } from "@/lib/dal/symbols";
 import prisma from "@/lib/db";
+import SymbolDetailCard from "@/components/features/symbols/SymbolDetailCard";
+import SymbolHeader from "@/components/features/symbols/SymbolHeader";
 import { RefreshPriceDataForm } from "@/components/features/prices/RefreshPriceDataForm";
+import { SymbolPriceDisplay } from "@/components/features/symbols/SymbolPriceDisplay";
 
 export const generateMetadata = async ({ params }: { params: { id: string } }) => {
   try {
@@ -56,7 +40,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
   const symbol = await prisma.symbol.findUnique({
     where: { id: symbolId },
     include: {
-      priceData: {
+      prices: {
         orderBy: { date: "desc" },
         take: 30, // 最新30日分のデータ
       },
@@ -68,9 +52,9 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
   }
 
   // 価格データをチャート用に整形
-  const chartData = symbol.priceData.map((data) => ({
-    date: data.date.toISOString().split("T")[0],
-    close: data.close,
+  const chartData = symbol.prices.map((price) => ({
+    date: price.date.toISOString().split("T")[0],
+    close: price.close,
   })).reverse();
 
   return (
@@ -86,47 +70,18 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
           <FavoriteButton
             symbolId={symbol.id}
             initialIsFavorite={false}
-            iconOnly={false}
+            variant="ghost"
+            size="default"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="md:col-span-2">
-          <Tabs defaultValue="chart" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="chart">チャート</TabsTrigger>
-              <TabsTrigger value="table">価格履歴</TabsTrigger>
-            </TabsList>
-            <TabsContent value="chart" className="h-96">
-              {chartData.length > 0 ? (
-                <SymbolPriceChart data={chartData} />
-              ) : (
-                <div className="flex h-full items-center justify-center rounded-lg border border-dashed p-8 text-center">
-                  <div>
-                    <p className="mb-2 text-lg font-medium">価格データがありません</p>
-                    <p className="text-sm text-muted-foreground">
-                      右側のフォームから価格データを取得してください
-                    </p>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
-            <TabsContent value="table">
-              {symbol.priceData.length > 0 ? (
-                <SymbolPriceTable priceData={symbol.priceData} />
-              ) : (
-                <div className="flex h-96 items-center justify-center rounded-lg border border-dashed p-8 text-center">
-                  <div>
-                    <p className="mb-2 text-lg font-medium">価格データがありません</p>
-                    <p className="text-sm text-muted-foreground">
-                      右側のフォームから価格データを取得してください
-                    </p>
-                  </div>
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
+          <SymbolPriceDisplay 
+            chartData={chartData} 
+            priceData={symbol.prices}
+          />
         </div>
 
         <div className="space-y-8">
