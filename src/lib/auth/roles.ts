@@ -1,4 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs";
+import { currentUser, auth } from "@clerk/nextjs/server";
 
 export enum UserRole {
   ADMIN = "admin",
@@ -30,14 +30,7 @@ export const isAdmin = async (): Promise<boolean> => {
 
 // クライアントサイドでのロール確認（非同期処理なし）
 export const hasRole = (allowedRole: UserRole): boolean => {
-  const { userId } = auth();
-  
-  // 未認証の場合
-  if (!userId) {
-    return false;
-  }
-  
-  // 認証済みの場合（ここではシンプルな実装）
-  // 注: 実際のロールは非同期処理が必要
-  return true;
+  // クライアントサイドではロール判定不可
+  // 必要ならpropsやcontext経由で渡す
+  return false;
 }; 

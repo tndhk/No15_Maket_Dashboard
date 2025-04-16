@@ -19,15 +19,22 @@ export class CoinGeckoAPI {
    * 価格データを取得して保存する
    */
   public async fetchPriceData(symbol: string, category: string): Promise<any[]> {
+    // デバッグログ: 呼び出し情報
+    console.log("[CoinGeckoAPI] fetchPriceData called:", symbol, category);
     // CoinGeckoは仮想通貨専用のため、他のカテゴリはデモデータを返す
     if (category !== "crypto") {
       return this.getDemoPriceData(symbol);
     }
     
     try {
-      // 通貨ID（小文字）とシンボル（大文字）は異なる可能性がある
-      // 簡易的な変換: シンボルを小文字に変換
-      const coinId = symbol.toLowerCase();
+      // JPY等のfiat通貨後置付きシンボルをサポート
+      let vsCurrency = 'usd';
+      let coinId = symbol.toLowerCase();
+      if (symbol.toUpperCase().endsWith('JPY')) {
+        vsCurrency = 'jpy';
+        coinId = symbol.slice(0, -3).toLowerCase();
+      }
+      console.log(`[CoinGeckoAPI] using coinId=${coinId}, vs_currency=${vsCurrency}`);
       
       // 最初に通貨IDを検索
       const coinsListUrl = `${this.baseUrl}/coins/list`;
@@ -38,6 +45,7 @@ export class CoinGeckoAPI {
       }
       
       const coinsList = await coinsListResponse.json();
+      console.log("[CoinGeckoAPI] coinsList length:", coinsList.length);
       
       // シンボルに一致するコインを探す
       const coin = coinsList.find(
@@ -45,13 +53,15 @@ export class CoinGeckoAPI {
       );
       
       if (!coin) {
-        // コインが見つからない場合はデモデータを返す
+        console.warn(`[CoinGeckoAPI] Coin not found for symbol: ${symbol}`);
         return this.getDemoPriceData(symbol);
       }
+      console.log("[CoinGeckoAPI] matched coin:", coin.id);
       
       // コインの過去30日間の市場データを取得
       const days = 30;
-      const marketChartUrl = `${this.baseUrl}/coins/${coin.id}/market_chart?vs_currency=usd&days=${days}`;
+      const marketChartUrl = `${this.baseUrl}/coins/${coin.id}/market_chart?vs_currency=${vsCurrency}&days=${days}`;
+      console.log("[CoinGeckoAPI] marketChartUrl:", marketChartUrl);
       
       const marketChartResponse = await fetch(marketChartUrl);
       
@@ -60,6 +70,7 @@ export class CoinGeckoAPI {
       }
       
       const marketChartData = await marketChartResponse.json();
+      console.log("[CoinGeckoAPI] marketChartData sample:", JSON.stringify(marketChartData).slice(0,500));
       
       // CoinGecko APIからのデータは[timestamp, value]の配列
       const prices = marketChartData.prices || []; // 終値
@@ -133,6 +144,7 @@ export class CoinGeckoAPI {
       const newPriceData = priceData.filter(
         p => !existingDateStrings.has(p.date.toISOString().split("T")[0])
       );
+      console.log("[CoinGeckoAPI] newPriceData count:", newPriceData.length);
       
       // データがない場合は早期リターン
       if (newPriceData.length === 0) {

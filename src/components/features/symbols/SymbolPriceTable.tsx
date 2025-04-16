@@ -14,11 +14,11 @@ interface PriceData {
   id: number;
   symbolId: number;
   date: Date;
-  open: number;
-  high: number;
-  low: number;
+  open: number | null;
+  high: number | null;
+  low: number | null;
   close: number;
-  volume: number;
+  volume: number | null;
   source?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -46,11 +46,11 @@ export default function SymbolPriceTable({ priceData }: SymbolPriceTableProps) {
           {priceData.map((price) => (
             <TableRow key={price.id}>
               <TableCell>{formatDate(price.date)}</TableCell>
-              <TableCell className="text-right">{price.open.toLocaleString()}</TableCell>
-              <TableCell className="text-right">{price.high.toLocaleString()}</TableCell>
-              <TableCell className="text-right">{price.low.toLocaleString()}</TableCell>
+              <TableCell className="text-right">{price.open !== null ? price.open.toLocaleString() : '-'}</TableCell>
+              <TableCell className="text-right">{price.high !== null ? price.high.toLocaleString() : '-'}</TableCell>
+              <TableCell className="text-right">{price.low !== null ? price.low.toLocaleString() : '-'}</TableCell>
               <TableCell className="text-right">{price.close.toLocaleString()}</TableCell>
-              <TableCell className="text-right">{price.volume.toLocaleString()}</TableCell>
+              <TableCell className="text-right">{price.volume !== null ? price.volume.toLocaleString() : '-'}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -2,15 +2,16 @@ import { notFound } from "next/navigation";
 import { FavoriteButton } from "@/components/features/favorites/FavoriteButton";
 import { getCurrentUser } from "@/lib/auth/auth";
 import { getSymbolById } from "@/lib/dal/symbols";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import SymbolDetailCard from "@/components/features/symbols/SymbolDetailCard";
 import SymbolHeader from "@/components/features/symbols/SymbolHeader";
 import { RefreshPriceDataForm } from "@/components/features/prices/RefreshPriceDataForm";
 import { SymbolPriceDisplay } from "@/components/features/symbols/SymbolPriceDisplay";
 
-export const generateMetadata = async ({ params }: { params: { id: string } }) => {
+export const generateMetadata = async ({ params }: { params: any }) => {
+  const p = await params;
   try {
-    const symbol = await getSymbolById(parseInt(params.id));
+    const symbol = await getSymbolById(parseInt(p.id));
     return {
       title: `${symbol.name} (${symbol.symbol}) - 金融データダッシュボード`,
       description: `${symbol.name}の価格データと分析情報`,
@@ -24,14 +25,13 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
 };
 
 interface SymbolPageProps {
-  params: {
-    id: string;
-  };
+  params: any;
 }
 
 export default async function SymbolPage({ params }: SymbolPageProps) {
+  const p = await params;
   const user = await getCurrentUser();
-  const symbolId = parseInt(params.id);
+  const symbolId = parseInt(p.id);
 
   if (isNaN(symbolId)) {
     return notFound();
@@ -52,9 +52,9 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
   }
 
   // 価格データをチャート用に整形
-  const chartData = symbol.prices.map((price) => ({
+  const chartData = symbol.prices.map((price: any) => ({
     date: price.date.toISOString().split("T")[0],
-    close: price.close,
+    close: price.close ?? 0,
   })).reverse();
 
   return (
@@ -64,7 +64,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
           name={symbol.name}
           symbol={symbol.symbol}
           category={symbol.category}
-          status={symbol.status}
+          status={symbol.isActive ? "アクティブ" : "非アクティブ"}
         />
         <div className="flex items-center gap-2">
           <FavoriteButton
@@ -90,7 +90,7 @@ export default async function SymbolPage({ params }: SymbolPageProps) {
             name={symbol.name}
             category={symbol.category}
             description={symbol.description || "詳細情報はありません"}
-            status={symbol.status}
+            status={symbol.isActive ? "アクティブ" : "非アクティブ"}
             createdAt={symbol.createdAt}
             updatedAt={symbol.updatedAt}
             id={symbol.id}

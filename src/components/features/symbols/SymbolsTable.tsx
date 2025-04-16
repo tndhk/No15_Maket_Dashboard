@@ -10,6 +10,10 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { FavoriteButton } from "@/components/features/favorites/FavoriteButton";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
+import { fetchAndSavePriceData } from "@/lib/api/fetchAndSavePriceData";
+import { toast } from "sonner";
+import { updatePriceAction } from "@/app/actions/update-price";
+import { useTransition } from "react";
 
 // 型定義
 export interface SymbolsTableProps {
@@ -25,6 +29,9 @@ export interface SymbolsTableProps {
     _count?: {
       prices: number;
     };
+    prices?: Array<{
+      close: number;
+    }>;
   }>;
 }
 
@@ -75,6 +82,8 @@ export function SymbolsTable({ symbols }: SymbolsTableProps) {
     }
   };
 
+  const [isPending, startTransition] = useTransition();
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4">
@@ -122,6 +131,7 @@ export function SymbolsTable({ symbols }: SymbolsTableProps) {
               <th className="p-2 text-left">カテゴリー</th>
               <th className="p-2 text-left">更新日</th>
               <th className="p-2 text-left">データ数</th>
+              <th className="p-2 text-left">最新価格</th>
               <th className="p-2 text-left">ステータス</th>
               <th className="w-[100px] p-2">アクション</th>
             </tr>
@@ -149,6 +159,7 @@ export function SymbolsTable({ symbols }: SymbolsTableProps) {
                 </td>
                 <td className="p-2">{formatDate(symbol.updatedAt)}</td>
                 <td className="p-2">{symbol._count?.prices || 0}</td>
+                <td className="p-2">{symbol.prices?.[0]?.close ?? '-'}</td>
                 <td className="p-2">
                   {symbol.isActive ? (
                     <Badge>アクティブ</Badge>
@@ -161,6 +172,26 @@ export function SymbolsTable({ symbols }: SymbolsTableProps) {
                     <Link href={`/symbols/${symbol.id}`}>
                       詳細
                     </Link>
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="ml-2"
+                    disabled={isPending}
+                    onClick={() => {
+                      startTransition(async () => {
+                        try {
+                          toast.loading("データ更新中...", { id: `update-${symbol.id}` });
+                          await updatePriceAction(symbol.symbol, symbol.category);
+                          toast.success("データ更新が完了しました", { id: `update-${symbol.id}` });
+                          router.refresh();
+                        } catch (e) {
+                          toast.error(`データ更新に失敗しました: ${e instanceof Error ? e.message : String(e)}`, { id: `update-${symbol.id}` });
+                        }
+                      });
+                    }}
+                  >
+                    {isPending ? "更新中..." : "データ更新"}
                   </Button>
                 </td>
               </tr>

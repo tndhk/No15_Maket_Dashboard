@@ -36,8 +36,14 @@ export class YahooFinanceAPI {
         // 為替の場合、=Xを追加
         yahooSymbol = `${symbol}=X`;
       } else if (category === "index") {
-        // 指数の場合、そのまま使用（通常は^から始まる）
-        yahooSymbol = symbol;
+        // 指数の場合、ユーザーコードからYahoo用コードへマッピング
+        const indexMapping: Record<string, string> = {
+          nikkei: "^N225",
+          dow: "^DJI",
+          sp500: "^GSPC",
+          nasdaq: "^IXIC",
+        };
+        yahooSymbol = indexMapping[symbol.toLowerCase()] || symbol;
       }
       
       // 1ヶ月間のデータを取得（1日間隔）

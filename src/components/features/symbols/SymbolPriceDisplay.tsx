@@ -14,11 +14,11 @@ interface PriceData {
   id: number;
   symbolId: number;
   date: Date;
-  open: number;
-  high: number;
-  low: number;
+  open: number | null;
+  high: number | null;
+  low: number | null;
   close: number;
-  volume: number;
+  volume: number | null;
   source?: string;
   createdAt: Date;
   updatedAt: Date;

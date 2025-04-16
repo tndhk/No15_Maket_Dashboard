@@ -11,15 +11,12 @@ export const metadata = {
 };
 
 // Next.js 13のApp Routerでは、searchParamsはすでにパースされているオブジェクトとして渡されます
-export default async function SymbolsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function SymbolsPage({ searchParams }: { searchParams: any }) {
+  const params = await searchParams;
   // 検索パラメータを安全に取得
-  const search = searchParams.search ? String(searchParams.search) : "";
-  const category = searchParams.category ? String(searchParams.category) : undefined;
-  const page = searchParams.page ? parseInt(String(searchParams.page)) : 1;
+  const search = params.search ? String(params.search) : "";
+  const category = params.category ? String(params.category) : undefined;
+  const page = params.page ? parseInt(String(params.page)) : 1;
 
   // APIから銘柄データを取得
   const { items, meta } = await getSymbols({

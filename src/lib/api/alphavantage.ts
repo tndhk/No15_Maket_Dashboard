@@ -18,13 +18,15 @@ export class AlphaVantageAPI {
 
   constructor() {
     // 本番環境では環境変数から取得
-    this.apiKey = process.env.ALPHA_VANTAGE_API_KEY || "demo";
+    this.apiKey = process.env.ALPHAVANTAGE_API_KEY || "demo";
+    console.log("[AlphaVantageAPI] 使用APIキー:", this.apiKey);
   }
 
   /**
    * 価格データを取得して保存する
    */
   public async fetchPriceData(symbol: string, category: string): Promise<any[]> {
+    console.log(`[AlphaVantageAPI] fetchPriceData called:`, symbol, category);
     try {
       // カテゴリに応じた関数を選択
       let apiFunction = "TIME_SERIES_DAILY";
@@ -46,6 +48,7 @@ export class AlphaVantageAPI {
       }
       
       const data = await response.json();
+      console.log("[AlphaVantageAPI] API response:", JSON.stringify(data).slice(0, 500));
       
       // デモキーの場合の処理
       if (data.Note) {
@@ -92,6 +95,8 @@ export class AlphaVantageAPI {
         p => !existingDateStrings.has(p.date.toISOString().split("T")[0])
       );
       
+      console.log("[AlphaVantageAPI] 保存件数:", newPriceData.length);
+      
       // データがない場合は早期リターン
       if (newPriceData.length === 0) {
         return [];
@@ -118,7 +123,7 @@ export class AlphaVantageAPI {
       return result;
       
     } catch (error) {
-      console.error(`Alpha Vantage API error for symbol ${symbol}:`, error);
+      console.error(`[AlphaVantageAPI] error:`, error);
       throw error;
     }
   }

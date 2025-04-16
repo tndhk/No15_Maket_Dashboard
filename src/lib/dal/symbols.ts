@@ -41,6 +41,10 @@ export async function getSymbols(filter: SymbolFilter) {
     const items = await prisma.symbol.findMany({
       where,
       include: {
+        prices: {
+          orderBy: { date: "desc" },
+          take: 1,
+        },
         _count: {
           select: {
             prices: true,
