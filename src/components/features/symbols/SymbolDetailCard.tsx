@@ -31,47 +31,49 @@ export default function SymbolDetailCard({
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label className="text-muted-foreground">シンボル</Label>
-            <p className="text-sm mt-1">{symbol}</p>
+          <div className="space-y-1">
+            <Label className="text-muted-foreground dark:text-gray-300">シンボル</Label>
+            <div>{symbol}</div>
           </div>
-          <div>
-            <Label className="text-muted-foreground">名前</Label>
-            <p className="text-sm mt-1">{name}</p>
+          <div className="space-y-1">
+            <Label className="text-muted-foreground dark:text-gray-300">名前</Label>
+            <div>{name}</div>
           </div>
-          <div>
-            <Label className="text-muted-foreground">カテゴリー</Label>
-            <p className="text-sm mt-1">
+          <div className="space-y-1">
+            <Label className="text-muted-foreground dark:text-gray-300">カテゴリー</Label>
+            <div>
               <Badge variant="outline" className="mr-1">
                 {getCategoryLabel(category)}
               </Badge>
-            </p>
+            </div>
           </div>
-          <div>
-            <Label className="text-muted-foreground">ステータス</Label>
-            <p className="text-sm mt-1">
-              <Badge variant={status === "active" ? "success" : "secondary"}>
+          <div className="space-y-1">
+            <Label className="text-muted-foreground dark:text-gray-300">ステータス</Label>
+            <div>
+              <Badge
+                variant={status === "active" ? "success" : "secondary"}
+              >
                 {status === "active" ? "有効" : "無効"}
               </Badge>
-            </p>
+            </div>
           </div>
-          <div>
-            <Label className="text-muted-foreground">ID</Label>
-            <p className="text-sm mt-1">{id}</p>
+          <div className="space-y-1">
+            <Label className="text-muted-foreground dark:text-gray-300">ID</Label>
+            <div className="text-sm">{id}</div>
           </div>
-          <div>
-            <Label className="text-muted-foreground">作成日</Label>
-            <p className="text-sm mt-1">{formatDate(createdAt)}</p>
+          <div className="space-y-1">
+            <Label className="text-muted-foreground dark:text-gray-300">作成日</Label>
+            <div className="text-sm">{formatDate(createdAt)}</div>
           </div>
-          <div>
-            <Label className="text-muted-foreground">更新日</Label>
-            <p className="text-sm mt-1">{formatDate(updatedAt)}</p>
+          <div className="space-y-1">
+            <Label className="text-muted-foreground dark:text-gray-300">更新日</Label>
+            <div className="text-sm">{formatDate(updatedAt)}</div>
           </div>
         </div>
         {description && (
-          <div className="mt-2">
-            <Label className="text-muted-foreground">説明</Label>
-            <p className="text-sm mt-1 whitespace-pre-line">{description}</p>
+          <div className="space-y-1 col-span-2">
+            <Label className="text-muted-foreground dark:text-gray-300">説明</Label>
+            <div className="text-sm whitespace-pre-line">{description}</div>
           </div>
         )}
       </CardContent>

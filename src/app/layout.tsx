@@ -5,6 +5,7 @@ import { jaJP } from "@clerk/localizations";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Inter } from "next/font/google";
+import BackButton from "@/components/common/BackButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,10 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         
         {/* メインコンテンツ */}
         <div className="flex-1 pt-16 pb-12 px-4 md:px-6">
+          {/* 戻るリンク */}
+          <div className="mb-4">
+            <BackButton />
+          </div>
           {children}
         </div>
       </div>

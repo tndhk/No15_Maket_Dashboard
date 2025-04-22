@@ -1,25 +1,32 @@
 import { SearchResult } from "@/components/features/symbols/SymbolSearchForm";
 
 // このキーはデモ用です。本番環境では環境変数から取得するべきです。
-const ALPHA_VANTAGE_API_KEY = "demo";
+const ALPHA_VANTAGE_API_KEY = process.env.NEXT_PUBLIC_ALPHA_VANTAGE_API_KEY || "";
 const COINAPI_KEY = "demo";
 
 /**
  * Alpha Vantage APIを使用して株式銘柄を検索する
  */
 export async function searchStocks(query: string): Promise<SearchResult[]> {
+  console.log(`[searchStocks] called with query=${query}, API_KEY=${ALPHA_VANTAGE_API_KEY}`);
   try {
-    const response = await fetch(
-      `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${encodeURIComponent(
-        query
-      )}&apikey=${ALPHA_VANTAGE_API_KEY}`
-    );
+    const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${encodeURIComponent(
+      query
+    )}&apikey=${ALPHA_VANTAGE_API_KEY}`;
+    console.log("[searchStocks] URL=", url);
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error("API request failed");
     }
 
     const data = await response.json();
+    // エラーメッセージが返ってきた場合はデモ結果を返す
+    if ((data as any)["Error Message"]) {
+      console.warn("Alpha Vantage API error:", (data as any)["Error Message"]);
+      return getDemoSearchResults(query, "stock");
+    }
+    console.log("[searchStocks] data=", JSON.stringify(data).slice(0,500));
     
     // デモキーの場合、APIが制限される場合があるのでエラーチェック
     if (data.Note) {

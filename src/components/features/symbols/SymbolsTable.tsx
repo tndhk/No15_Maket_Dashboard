@@ -88,7 +88,7 @@ export function SymbolsTable({ symbols }: SymbolsTableProps) {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground dark:text-gray-300" />
           <Input
             placeholder="銘柄名または証券コードで検索..."
             value={search}
@@ -120,7 +120,7 @@ export function SymbolsTable({ symbols }: SymbolsTableProps) {
       
       <div className="rounded-md border">
         <table className="w-full">
-          <caption className="p-4 text-sm text-muted-foreground">
+          <caption className="p-4 text-sm text-muted-foreground dark:text-gray-300">
             合計 {symbols.length} 件の銘柄
           </caption>
           <thead className="bg-muted/50">

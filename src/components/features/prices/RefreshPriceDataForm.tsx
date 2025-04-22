@@ -40,6 +40,8 @@ export function RefreshPriceDataForm({
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dataSource, setDataSource] = useState<string>("alphavantage");
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
 
   // 適切なデータソースを提案
   const suggestDataSource = (category: string): string => {
@@ -76,12 +78,19 @@ export function RefreshPriceDataForm({
         toast.success(result.message);
         // ページを更新
         router.refresh();
+        setFormSuccess(result.message);
       } else {
         toast.error("データ取得に失敗しました");
+        setFormError("データ取得に失敗しました");
       }
     } catch (error) {
       console.error("Error refreshing price data:", error);
       toast.error(
+        error instanceof Error
+          ? error.message
+          : "価格データの更新中にエラーが発生しました"
+      );
+      setFormError(
         error instanceof Error
           ? error.message
           : "価格データの更新中にエラーが発生しました"
@@ -150,6 +159,13 @@ export function RefreshPriceDataForm({
                 <li>CoinGecko: 仮想通貨に特化</li>
               </ul>
             </div>
+
+            {formError && (
+              <div className="text-sm text-red-500 mb-4">{formError}</div>
+            )}
+            {formSuccess && (
+              <div className="text-sm text-muted-foreground dark:text-gray-300">{formSuccess}</div>
+            )}
           </div>
         </CardContent>
         <CardFooter>

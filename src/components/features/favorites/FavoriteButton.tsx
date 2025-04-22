@@ -99,8 +99,8 @@ export function FavoriteButton({
     >
       <Star
         className={cn(
-          "h-4 w-4",
-          favorite ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
+          "h-6 w-6 cursor-pointer transition-colors",
+          favorite ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground dark:text-gray-300"
         )}
       />
     </Button>

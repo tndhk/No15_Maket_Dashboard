@@ -22,25 +22,22 @@ const refreshPriceDataSchema = z.object({
  * シンボルの価格データを更新・取得するためのServer Action
  */
 export async function refreshPriceData(formData: FormData) {
-  // 現在のユーザーを取得
-  const user = await getCurrentUser();
-  
-  if (!user) {
-    throw new Error("認証が必要です");
-  }
-  
-  // フォームデータを取得
+  // フォームデータを取得して検証
   const validatedFields = refreshPriceDataSchema.safeParse({
     symbolId: formData.get("symbolId"),
     dataSource: formData.get("dataSource"),
   });
-  
   if (!validatedFields.success) {
     console.error("Validation error:", validatedFields.error);
     throw new Error("入力データが不正です");
   }
-  
   const { symbolId, dataSource } = validatedFields.data;
+  
+  // 認証がない場合はサインインへリダイレクト
+  const user = await getCurrentUser();
+  if (!user) {
+    redirect(`/sign-in?redirect=/symbols/${symbolId}`);
+  }
   
   try {
     // シンボルの情報を取得

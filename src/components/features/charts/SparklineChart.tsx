@@ -102,7 +102,7 @@ export function SparklineChart({
             className={cn(
               "text-sm font-semibold",
               percentChange > 0 ? "text-green-500" : 
-              percentChange < 0 ? "text-red-500" : "text-gray-500"
+              percentChange < 0 ? "text-red-500" : "text-gray-500 dark:text-gray-300"
             )}
           >
             {percentChange > 0 ? "+" : ""}

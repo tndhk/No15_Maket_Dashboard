@@ -11,15 +11,15 @@ export default function AdminPage() {
     <RoleGuard allowedRole={UserRole.ADMIN} fallback={
       <div className="space-y-6">
         <h1 className="text-3xl font-bold mb-4">アクセス権限がありません</h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground dark:text-gray-300">
           このページは管理者専用です。アクセス権限をリクエストするには管理者に連絡してください。
         </p>
       </div>
     }>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold mb-4">管理者ダッシュボード</h1>
-        <p className="text-muted-foreground mb-8">
-          システム設定や管理タスクはこちらから行うことができます。
+        <h1 className="text-3xl font-bold mb-2">管理者ダッシュボード</h1>
+        <p className="text-muted-foreground dark:text-gray-300">
+          システム管理、ユーザー管理、データ管理を行うことができます。
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -48,12 +48,14 @@ export default function SymbolHeader({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-        {symbol}
-        <span className="text-lg font-normal text-muted-foreground">
-          {name}
-        </span>
-      </h1>
+      <div className="mb-4">
+        <h1 className="flex items-center text-2xl sm:text-3xl font-bold mb-1">
+          {name || "銘柄詳細"} 
+          <span className="text-lg font-normal text-muted-foreground dark:text-gray-300">
+            {symbol && `(${symbol})`}
+          </span>
+        </h1>
+      </div>
       <div className="flex items-center gap-2 mt-1">
         <span
           className={cn(

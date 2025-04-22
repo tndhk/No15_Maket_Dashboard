@@ -114,7 +114,7 @@ export function DateRangePicker({
             variant={"outline"}
             className={cn(
               "justify-start text-left font-normal",
-              !dateRange && "text-muted-foreground",
+              !dateRange && "text-muted-foreground dark:text-gray-300",
               className
             )}
             disabled={disabled}
@@ -139,7 +139,7 @@ export function DateRangePicker({
             <div className="space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-sm text-muted-foreground mb-1 block">
+                  <label className="text-sm text-muted-foreground dark:text-gray-300 mb-1 block">
                     開始日
                   </label>
                   <Input
@@ -150,7 +150,7 @@ export function DateRangePicker({
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-muted-foreground mb-1 block">
+                  <label className="text-sm text-muted-foreground dark:text-gray-300 mb-1 block">
                     終了日
                   </label>
                   <Input

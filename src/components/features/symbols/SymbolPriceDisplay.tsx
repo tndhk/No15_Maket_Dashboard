@@ -43,7 +43,7 @@ export function SymbolPriceDisplay({ chartData, priceData }: SymbolPriceDisplayP
           <div className="flex h-full items-center justify-center rounded-lg border border-dashed p-8 text-center">
             <div>
               <p className="mb-2 text-lg font-medium">価格データがありません</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground dark:text-gray-300">
                 右側のフォームから価格データを取得してください
               </p>
             </div>
@@ -57,7 +57,7 @@ export function SymbolPriceDisplay({ chartData, priceData }: SymbolPriceDisplayP
           <div className="flex h-96 items-center justify-center rounded-lg border border-dashed p-8 text-center">
             <div>
               <p className="mb-2 text-lg font-medium">価格データがありません</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground dark:text-gray-300">
                 右側のフォームから価格データを取得してください
               </p>
             </div>

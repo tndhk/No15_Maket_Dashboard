@@ -6,7 +6,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-md p-8 space-y-8 bg-card rounded-lg shadow-lg">
         <div className="text-center">
           <h1 className="text-2xl font-bold">金融データダッシュボード</h1>
-          <p className="mt-2 text-muted-foreground">新しいアカウントを作成</p>
+          <p className="mt-2 text-muted-foreground dark:text-gray-300">新しいアカウントを作成</p>
         </div>
         <SignUp appearance={{
           elements: {
